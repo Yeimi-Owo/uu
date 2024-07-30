@@ -1,6 +1,6 @@
-//Arreglo que contiene las palabras para jugar
-let arrayPalabras =["GUITARRA", "ELEFANTE", "TURQUESA", "MARIELA", "TECLADO", "INGLATERRA"];
-//Arreglo que contiene las ayudas de cada palabra
+// Arreglo que contiene las palabras para jugar
+let arrayPalabras = ["GUITARRA", "ELEFANTE", "TURQUESA", "MARIELA", "TECLADO", "INGLATERRA"];
+// Arreglo que contiene las ayudas de cada palabra
 let ayudas = [
     "Instrumento Musical",
     "Animal de la selva",
@@ -8,35 +8,35 @@ let ayudas = [
     "Nombre de mujer",
     "Hardware de computadora",
     "Es un Pais"
-]
-//variable que guarda la cantidad de palabras ya jugadas
+];
+// Variable que guarda la cantidad de palabras ya jugadas
 let cantPalabrasJugadas = 0;
 
-//Variable que guarda la cantidad de intentos restantes
+// Variable que guarda la cantidad de intentos restantes
 let intentosRestantes = 5;
 
-//variable que guarda el indice de la Palabra actual
+// Variable que guarda el índice de la Palabra actual
 let posActual;
 
-//arreglo que contiene la palabra actual con la que estoy judando
+// Arreglo que contiene la palabra actual con la que estoy jugando
 let arrayPalabraActual = [];
 
-//Cantidad de de letras acertadas por cada jugada
+// Cantidad de letras acertadas por cada jugada
 let cantidadAcertadas = 0;
 
-//Arreglo que guarda cada letra en divs
+// Arreglo que guarda cada letra en divs
 let divsPalabraActual = [];
 
-//Cantidad de palabras que debe acertar en cada jugada.
+// Cantidad de palabras que debe acertar en cada jugada
 let totalQueDebeAcertar;
 
-//Funcion que carga la  palabra nueva para jugar
-function cargarNuevaPalabra(){
-    //Aumento en uno cantidad de palabras jugadas y controlo si llego a su limite
+// Función que carga la palabra nueva para jugar
+function cargarNuevaPalabra() {
+    // Aumento en uno cantidad de palabras jugadas y controlo si llego a su límite
     cantPalabrasJugadas++;
-    if(cantPalabrasJugadas>6){
-        //volvemos a cargar el arreglo
-        arrayPalabras =["GUITARRA", "ELEFANTE", "TURQUESA", "MARIELA", "TECLADO", "INGLATERRA"];
+    if (cantPalabrasJugadas > 6) {
+        // Volvemos a cargar el arreglo
+        arrayPalabras = ["GUITARRA", "ELEFANTE", "TURQUESA", "MARIELA", "TECLADO", "INGLATERRA"];
         ayudas = [
             "Instrumento Musical",
             "Animal de la selva",
@@ -44,106 +44,110 @@ function cargarNuevaPalabra(){
             "Nombre de mujer",
             "Hardware de computadora",
             "Es un Pais"
-        ]
+        ];
     }
 
-    //Selecciono una posicion random
-    posActual = Math.floor(Math.random()*arrayPalabras.length);
+    // Selecciono una posición random
+    posActual = Math.floor(Math.random() * arrayPalabras.length);
 
-    //Tomamos la palabra nueva
+    // Tomamos la palabra nueva
     let palabra = arrayPalabras[posActual];
-    //cantidad de letras que tiene esa palabra
+    // Cantidad de letras que tiene esa palabra
     totalQueDebeAcertar = palabra.length;
-    //coloco en 0 la cantidad acertadas hata el momento
+    // Coloco en 0 la cantidad acertadas hasta el momento
     cantidadAcertadas = 0;
 
-    //Guardamos la palabra que esta en formato string en un arreglo
+    // Guardamos la palabra que está en formato string en un arreglo
     arrayPalabraActual = palabra.split('');
 
-    //limpiamos los contenedores que quedaron cargadas con la palabra anterior
+    // Limpiamos los contenedores que quedaron cargadas con la palabra anterior
     document.getElementById("palabra").innerHTML = "";
     document.getElementById("letrasIngresadas").innerHTML = "";
 
-    //Cargamos la cantidad de divs (letras) que tiene la palabra
-    for(i=0;i<palabra.length;i++){
+    // Cargamos la cantidad de divs (letras) que tiene la palabra
+    for (i = 0; i < palabra.length; i++) {
         var divLetra = document.createElement("div");
         divLetra.className = "letra";
         document.getElementById("palabra").appendChild(divLetra);
     }
 
-    //Selecciono todos los divs de la palabra
+    // Selecciono todos los divs de la palabra
     divsPalabraActual = document.getElementsByClassName("letra");
 
-    //setemos los intentos
+    // Seteamos los intentos
     intentosRestantes = 5;
     document.getElementById("intentos").innerHTML = intentosRestantes;
 
-    //Cargamos la ayuda de la pregunta
+    // Cargamos la ayuda de la pregunta
     document.getElementById("ayuda").innerHTML = ayudas[posActual];
 
-   //elimino el elemento ya seleccionado del arreglo.
-    //splice(posActual,1): A partir de la posicon posActual elimino 1 elemento
-    arrayPalabras.splice(posActual,1);
-    ayudas.splice(posActual,1);
+    // Elimino el elemento ya seleccionado del arreglo
+    // splice(posActual,1): A partir de la posición posActual elimino 1 elemento
+    arrayPalabras.splice(posActual, 1);
+    ayudas.splice(posActual, 1);
 
+    // Enfoco el campo de entrada
+    document.getElementById("inputLetra").focus();
 }
 
-//Llamada para cargar la primera palabra del juego
+// Llamada para cargar la primera palabra del juego
 cargarNuevaPalabra();
 
-//Detecto la tecla que el usuario presion
-document.addEventListener("keydown", event => {
-    //Controlo si la tecla presionada es una letra
-    if(isLetter(event.key)){
-        //Tomo las letras ya ingresadas hasta el momento
+// Detecto la tecla que el usuario presiona
+document.getElementById("inputLetra").addEventListener("input", event => {
+    let letraIngresada = event.target.value.toUpperCase();
+    event.target.value = ''; // Limpio el campo de entrada después de capturar la letra
+
+    if (isLetter(letraIngresada)) {
+        // Tomo las letras ya ingresadas hasta el momento
         let letrasIngresadas = document.getElementById("letrasIngresadas").innerHTML;
-        //arma un a arreglo con las letras ingresadas
+        // Armo un arreglo con las letras ingresadas
         letrasIngresadas = letrasIngresadas.split('');
-        
-        //controlo si la letra presionada ya ha sido ingresada
-        if(letrasIngresadas.lastIndexOf(event.key.toUpperCase()) === -1){
-            //variable bandera para saber si la letra ingresada esta en la palabra a descrubir
+
+        // Controlo si la letra ingresada ya ha sido ingresada
+        if (letrasIngresadas.lastIndexOf(letraIngresada) === -1) {
+            // Variable bandera para saber si la letra ingresada está en la palabra a descubrir
             let acerto = false;
 
-            //Recorro el arreglo que ocntiene la palabra para verificar si la palabra ingresada esta
-            for(i=0;i<arrayPalabraActual.length;i++){
-                if(arrayPalabraActual[i] == event.key.toUpperCase()){//acertó
-                    divsPalabraActual[i].innerHTML = event.key.toUpperCase();
+            // Recorro el arreglo que contiene la palabra para verificar si la palabra ingresada está
+            for (i = 0; i < arrayPalabraActual.length; i++) {
+                if (arrayPalabraActual[i] === letraIngresada) { // Acertó
+                    divsPalabraActual[i].innerHTML = letraIngresada;
                     acerto = true;
-                    //Aumento en uno la cantidad de letras acertadas 
-                    cantidadAcertadas = cantidadAcertadas + 1;
+                    // Aumento en uno la cantidad de letras acertadas
+                    cantidadAcertadas++;
                 }
             }
-        
-            //Controlo si acerto al menos una letra
-            if(acerto==true){
-                //controlamos si ya acerto todas
-                if(totalQueDebeAcertar == cantidadAcertadas){
-                    //asigno a cada div de la palabra la clase pintar para ponerlo en verde cada div
-                    for(i=0;i<arrayPalabraActual.length;i++){
-                        divsPalabraActual[i].className="letra pintar";
+
+            // Controlo si acertó al menos una letra
+            if (acerto) {
+                // Controlamos si ya acertó todas
+                if (totalQueDebeAcertar === cantidadAcertadas) {
+                    // Asigno a cada div de la palabra la clase pintar para ponerlo en verde cada div
+                    for (i = 0; i < arrayPalabraActual.length; i++) {
+                        divsPalabraActual[i].className = "letra pintar";
                     }
                 }
-            }else{
-                //No acerto, decremento los intentos restantes
-                intentosRestantes = intentosRestantes - 1;
+            } else {
+                // No acertó, decremento los intentos restantes
+                intentosRestantes--;
                 document.getElementById("intentos").innerHTML = intentosRestantes;
 
-                //controlamos si ya acabo todas la oportunidades
-                if(intentosRestantes<=0){
-                    for(i=0;i<arrayPalabraActual.length;i++){
-                        divsPalabraActual[i].className="letra pintarError";
+                // Controlamos si ya acabó todas las oportunidades
+                if (intentosRestantes <= 0) {
+                    for (i = 0; i < arrayPalabraActual.length; i++) {
+                        divsPalabraActual[i].className = "letra pintarError";
                     }
                 }
             }
 
-            //agrega la letra ingresada a las letras ya ingresadas que se visualizan
-            document.getElementById("letrasIngresadas").innerHTML += event.key.toLocaleUpperCase() + " - ";
+            // Agrega la letra ingresada a las letras ya ingresadas que se visualizan
+            document.getElementById("letrasIngresadas").innerHTML += letraIngresada + " - ";
         }
     }
 });
 
-//Funcion que me determina si un caracter es una letra
+// Función que determina si un carácter es una letra
 function isLetter(str) {
     return str.length === 1 && str.match(/[a-z]/i);
 }
